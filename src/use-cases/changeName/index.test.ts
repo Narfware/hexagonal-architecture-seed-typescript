@@ -8,8 +8,15 @@ import { ILogger } from '../../ports/logger'
 import sinon from 'sinon'
 
 describe('updateExample use-case', () => {
+  const now = new Date()
+  let clock: sinon.SinonFakeTimers
+
   beforeEach(() => {
-    sinon.resetHistory()
+    clock = sinon.useFakeTimers(now.getTime())
+  })
+
+  afterEach(() => {
+    clock.restore()
   })
 
   it('should update the example successfully', async () => {
@@ -49,7 +56,7 @@ describe('updateExample use-case', () => {
       }
     }
 
-    sinon.stub(FakeImpl.prototype, 'getById').returns(
+    sinon.stub(FakeImpl.prototype, 'getByName').returns(
       Promise.resolve(
         new Example({
           id: '123',
@@ -57,7 +64,7 @@ describe('updateExample use-case', () => {
           lastName: 'lastName',
           phone: '789',
           hobbies: [],
-          createdAt: new Date(),
+          createdAt: now,
         })
       )
     )
@@ -75,7 +82,7 @@ describe('updateExample use-case', () => {
           lastName: 'lastName',
           phone: '789',
           hobbies: [],
-          createdAt: new Date(),
+          createdAt: now,
         })
       )
     ).toBeTruthy()
